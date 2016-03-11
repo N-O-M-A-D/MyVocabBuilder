@@ -16,7 +16,7 @@
             android:id="@+id/german_word"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
+            android:layout_weight="6"
             android:layout_gravity="center_horizontal"
             android:padding="4dp"
             android:text="anmachen"
@@ -28,10 +28,10 @@
             android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
             android:onClick="nextWord"
             android:text="Next" />
 
@@ -54,37 +54,37 @@
                 android:id="@+id/button_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="+3 Points" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
             <Button
                 android:id="@+id/button_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
             <Button
                 android:id="@+id/button_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
             <Button
                 android:id="@+id/button_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
 
         </LinearLayout>
@@ -100,38 +100,38 @@
                 android:id="@+id/button_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="+3 Points" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
 
             <Button
                 android:id="@+id/button_6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
             <Button
                 android:id="@+id/button_7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
             <Button
                 android:id="@+id/button_8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Free Throw" />
+                android:layout_marginTop="@dimen/button_vertical_margin"
+                android:layout_marginLeft="@dimen/button_horizontal_margin"
+                android:layout_marginRight="@dimen/button_horizontal_margin"
+                android:text="" />
 
         </LinearLayout>
 

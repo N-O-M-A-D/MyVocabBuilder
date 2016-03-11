@@ -22,11 +22,14 @@ public class MainActivity extends AppCompatActivity {
     int k;
     int noOfEnglishWords = 0;
     int noOfButtons = 8;
+    int[] randomizeOrder = new int[noOfButtons];
     int noOfTranslationsToGuess;
+    int noOfGuessesMade;
 
     List<List<List>> indexGermanToEnglishJava = new ArrayList<List<List>>();
     List<String> englishWords = new ArrayList<String>();
     List<Button> translationButtons = new ArrayList<Button>();
+    String[] guessResults = new String[noOfButtons];
 
     OnClickListener translationListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void nextWord (View v) {
-        if(noOfTranslationsToGuess == 0)
+        if(noOfTranslationsToGuess == noOfGuessesMade)
         displayNextWord();
     }
 
@@ -169,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Can get rid of eventually, for now just used to cycle through words
+     *
      */
     public void guessMade(View v) {
 
@@ -185,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if(noOfTranslationsToGuess > 0) {
+        if(noOfTranslationsToGuess > noOfGuessesMade) {
 
             Log.w("MainActivity.java", "THE button clicked is " + v.getId());
             Log.w("MainActivity.java", "THE first button is " + translationButtons.get(0).getId());
@@ -195,13 +198,89 @@ public class MainActivity extends AppCompatActivity {
 
 
             //((Button) v).setText("me?");
-            v.setBackgroundColor(55);
+            int myColor = getResources().getColor(R.color.buttonStateClicked);
+            v.setBackgroundColor(myColor);
+
+            updateGuessResults(v);
+
             // testButton.setText("hello");
-            noOfTranslationsToGuess--;
+
+            Log.w("MainActivity.java", "Number of guesses made is " + noOfGuessesMade);
+        }
+
+        ((TextView) findViewById(R.id.next_button)).setText(String.valueOf(noOfTranslationsToGuess - noOfGuessesMade));
+
+        if(noOfTranslationsToGuess == noOfGuessesMade) {
+            ((TextView) findViewById(R.id.next_button)).setText("NEXT");
+            displayResults();
         }
     }
 
+
+    public void displayResults() {
+        for(i=0; i < noOfButtons; i++) {
+            switch (guessResults[i]) {
+                case "Correct":
+                    int myColor = getResources().getColor(R.color.buttonStateCorrect);
+                    translationButtons.get(i).setBackgroundColor(myColor);
+                    break;
+                case "InCorrect":
+                    myColor = getResources().getColor(R.color.buttonStateIncorrect);
+                    translationButtons.get(i).setBackgroundColor(myColor);
+                    break;
+                case "Missed":
+                    myColor = getResources().getColor(R.color.buttonStateMissed);
+                    translationButtons.get(i).setBackgroundColor(myColor);
+                    break;
+                case "False":
+                    myColor = getResources().getColor(R.color.buttonStateUntouched);
+                    translationButtons.get(i).setBackgroundColor(myColor);
+                    break;
+
+            }
+
+            Log.w("MainActivity.java", "Button " + i + " is " + guessResults[i]);
+        }
+
+    }
+
+
+
+    public void updateGuessResults(View v) {
+        i = 0;
+
+        while (translationButtons.get(i) != v) {
+            i++;
+            Log.w("MainActivity.java", "i is " + i);
+        }
+        switch (guessResults[i]) {
+            case "Missed": guessResults[i] = "Correct";
+                noOfGuessesMade++;
+                break;
+            case "False": guessResults[i] = "InCorrect";
+                noOfGuessesMade++;
+                break;
+            case "Correct": guessResults[i] = "Missed";
+                noOfGuessesMade--;
+                int myColor = getResources().getColor(R.color.buttonStateUntouched);
+                v.setBackgroundColor(myColor);
+                Log.w("MainActivity.java", "Number of guesses made is " + noOfGuessesMade);
+                break;
+            case "InCorrect": guessResults[i] = "False";
+                noOfGuessesMade--;
+                myColor = getResources().getColor(R.color.buttonStateUntouched);
+                v.setBackgroundColor(myColor);
+                Log.w("MainActivity.java", "Number of guesses made is " + noOfGuessesMade);
+                break;
+        }
+    }
+
+
     public void displayNextWord() {
+
+
+
+
         TextView germanWord = (TextView) findViewById(R.id.german_word);
         germanWord.setText(String.valueOf(indexGermanToEnglishJava.get(wordNumber).get(0).get(0)));
 
@@ -239,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          *Durstenfeld's version to randomize
          */
-        int[] randomizeOrder = new int[noOfButtons];
+
 
         for (i=0; i < noOfButtons; i++) {
             randomizeOrder[i] = i;
@@ -261,12 +340,29 @@ public class MainActivity extends AppCompatActivity {
     public void displayTranslations(List<String> choices, int[] randomizeOrder) {
 
 
-        for (i=0; i < noOfButtons; i++) {
+        for (i = 0; i < noOfButtons; i++) {
             Integer nextElement = randomizeOrder[i];
             Log.w("MainActivity.java", "THE next element is " + nextElement);
             translationButtons.get(i).setText(String.valueOf(choices.get(nextElement)));
+            int myColor = getResources().getColor(R.color.buttonStateUntouched);
+            translationButtons.get(i).setBackgroundColor(myColor);
         }
 
+        noOfGuessesMade = 0;
+        initializeGuessResults();
+        ((TextView) findViewById(R.id.next_button)).setText(String.valueOf(noOfTranslationsToGuess - noOfGuessesMade));
+    }
+
+
+    public void initializeGuessResults() {
+        for (i = 0; i < noOfButtons; i++) {
+            if (randomizeOrder[i] < noOfTranslationsToGuess) {
+                guessResults[i] = "Missed";
+            } else {
+                guessResults[i] = "False";
+            }
+            Log.w("MainActivity.java", "Button " + i + " is " + guessResults[i]);
+        }
 
 
     }
