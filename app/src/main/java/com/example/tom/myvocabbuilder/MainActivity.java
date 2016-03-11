@@ -8,9 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,11 +16,13 @@ public class MainActivity extends AppCompatActivity {
     int wordNumber = 0;
     int i;
     int j;
+    int k;
     int noOfEnglishWords = 0;
+    int noOfButtons = 8;
 
     List<List<List>> indexGermanToEnglishJava = new ArrayList<List<List>>();
     List<String> englishWords = new ArrayList<String>();
-
+    List<TextView> translationButtons = new ArrayList<TextView>();
 
 
     @Override
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         populateIndex(indexGermanToEnglishJava);
-        generateEnglishWords(englishWords);
+
 
         setContentView(R.layout.activity_main);
         displayNextWord(wordNumber);
@@ -70,7 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void generateEnglishWords(List<String> currentList) {}
+    public void indexTranslationButtons(List<TextView> translationButtons) {
+        translationButtons.add((TextView) findViewById(R.id.button_1));
+        translationButtons.add((TextView) findViewById(R.id.button_2));
+        translationButtons.add((TextView) findViewById(R.id.button_3));
+        translationButtons.add((TextView) findViewById(R.id.button_4));
+        translationButtons.add((TextView) findViewById(R.id.button_5));
+        translationButtons.add((TextView) findViewById(R.id.button_6));
+        translationButtons.add((TextView) findViewById(R.id.button_7));
+        translationButtons.add((TextView) findViewById(R.id.button_8));
+    }
 
 
     public List<List> initialArrayWords(int lineNumber, List<String> inputWordsArray) {
@@ -146,18 +155,19 @@ public class MainActivity extends AppCompatActivity {
 
         Integer entryStartEnWords = indexNoEnWords.get(0);
 
-        Set<String> choices = new HashSet<String>();
+        List<String> choices = new ArrayList<String>();
 
         while (choices.size() < noOfTranslationsToShow) {
 
             int random = (int) (Math.random() * entrySizeEn);
             Log.w("MainActivity.java", "THE chosen entry IS " + random);
-
-            choices.add(new String(String.valueOf(indexGermanToEnglishJava.get(number).get(1).get(random))));
+            String nextWord = new String(String.valueOf(indexGermanToEnglishJava.get(number).get(1).get(random)));
+            if(!choices.contains(nextWord))
+                choices.add(nextWord);
 
         }
 
-        while (choices.size() < 8) {
+        while (choices.size() < noOfButtons) {
             int random = (int) (Math.random() * (englishWords.size() - entrySizeEn));
             Log.w("MainActivity.java", "THE chosen entry number IS " + random);
             if(random >= entryStartEnWords)
@@ -167,35 +177,40 @@ public class MainActivity extends AppCompatActivity {
             choices.add(new String(String.valueOf(englishWords.get(random))));
         }
 
-        List<String> choicesArray = new ArrayList<String>(choices);
+        /**
+         *Durstenfeld's version to randomize
+         */
+        int[] randomizeOrder = new int[noOfButtons];
 
-        displayTranslations(choicesArray);
+        for (i=0; i < noOfButtons; i++) {
+            randomizeOrder[i] = i;
+        }
+
+        for (i = noOfButtons - 1; i > 0; i--) {
+            j = (int) (Math.random() * noOfButtons);
+            k = randomizeOrder[i];
+            randomizeOrder[i] = randomizeOrder[j];
+            randomizeOrder[j] = k;
+        }
+
+        displayTranslations(choices, randomizeOrder);
         Log.w("MainActivity.java", "Point 5");
 
-        /**translationChoices.get(0).setText(String.valueOf(index.get(number).get(1).get(random)));
-         *
-         */
     }
 
 
-    public void displayTranslations(List<String> choices) {
+    public void displayTranslations(List<String> choices, int[] randomizeOrder) {
 
-        TextView translationChoice = (TextView) findViewById(R.id.button_1);
-        translationChoice.setText(String.valueOf(choices.get(0)));
-        translationChoice = (TextView) findViewById(R.id.button_2);
-        translationChoice.setText(String.valueOf(choices.get(1)));
-        translationChoice = (TextView) findViewById(R.id.button_3);
-        translationChoice.setText(String.valueOf(choices.get(2)));
-        translationChoice = (TextView) findViewById(R.id.button_4);
-        translationChoice.setText(String.valueOf(choices.get(3)));
-        translationChoice = (TextView) findViewById(R.id.button_5);
-        translationChoice.setText(String.valueOf(choices.get(4)));
-        translationChoice = (TextView) findViewById(R.id.button_6);
-        translationChoice.setText(String.valueOf(choices.get(5)));
-        translationChoice = (TextView) findViewById(R.id.button_7);
-        translationChoice.setText(String.valueOf(choices.get(6)));
-        translationChoice = (TextView) findViewById(R.id.button_8);
-        translationChoice.setText(String.valueOf(choices.get(7)));
+        indexTranslationButtons(translationButtons);
+
+
+        for (i=0; i < noOfButtons; i++) {
+            Integer nextElement = randomizeOrder[i];
+            Log.w("MainActivity.java", "THE next element is " + nextElement);
+            translationButtons.get(i).setText(String.valueOf(choices.get(nextElement)));
+        }
+
+
     }
 
 }
