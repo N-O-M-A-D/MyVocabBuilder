@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,10 +22,18 @@ public class MainActivity extends AppCompatActivity {
     int k;
     int noOfEnglishWords = 0;
     int noOfButtons = 8;
+    int noOfTranslationsToGuess;
 
     List<List<List>> indexGermanToEnglishJava = new ArrayList<List<List>>();
     List<String> englishWords = new ArrayList<String>();
-    List<TextView> translationButtons = new ArrayList<TextView>();
+    List<Button> translationButtons = new ArrayList<Button>();
+
+    OnClickListener translationListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            guessMade(v);
+
+        }
+    };
 
 
     @Override
@@ -30,11 +41,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         populateIndex(indexGermanToEnglishJava);
-
-
         setContentView(R.layout.activity_main);
-        displayNextWord(wordNumber);
+        indexTranslationButtons(translationButtons);
+        displayNextWord();
 
+
+
+        //Button btn = (Button) findViewById(R.id.button_1);
+
+
+    }
+
+
+    public void nextWord (View v) {
+        if(noOfTranslationsToGuess == 0)
+        displayNextWord();
     }
 
 
@@ -70,16 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void indexTranslationButtons(List<TextView> translationButtons) {
-        translationButtons.add((TextView) findViewById(R.id.button_1));
-        translationButtons.add((TextView) findViewById(R.id.button_2));
-        translationButtons.add((TextView) findViewById(R.id.button_3));
-        translationButtons.add((TextView) findViewById(R.id.button_4));
-        translationButtons.add((TextView) findViewById(R.id.button_5));
-        translationButtons.add((TextView) findViewById(R.id.button_6));
-        translationButtons.add((TextView) findViewById(R.id.button_7));
-        translationButtons.add((TextView) findViewById(R.id.button_8));
-    }
+
 
 
     public List<List> initialArrayWords(int lineNumber, List<String> inputWordsArray) {
@@ -134,24 +146,71 @@ public class MainActivity extends AppCompatActivity {
         return arrayWords;
     }
 
+
+
+    public void indexTranslationButtons(List<Button> translationButtons) {
+        translationButtons.add((Button) findViewById(R.id.button_1));
+
+        translationButtons.add((Button) findViewById(R.id.button_2));
+        translationButtons.add((Button) findViewById(R.id.button_3));
+        translationButtons.add((Button) findViewById(R.id.button_4));
+        translationButtons.add((Button) findViewById(R.id.button_5));
+        translationButtons.add((Button) findViewById(R.id.button_6));
+        translationButtons.add((Button) findViewById(R.id.button_7));
+        translationButtons.add((Button) findViewById(R.id.button_8));
+
+        for (i=0; i < noOfButtons; i++) {
+            translationButtons.get(i).setOnClickListener(translationListener);
+        }
+    }
+
+
+
+
+
     /**
      * Can get rid of eventually, for now just used to cycle through words
      */
-    public void nextWord(View v) {
-        wordNumber = wordNumber + 1;
-        displayNextWord(wordNumber);
+    public void guessMade(View v) {
 
+
+        //((Button) v).setText("me?");
+        //Button testButton = (Button) findViewById(R.id.button_1);
+
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+
+
+        if(noOfTranslationsToGuess > 0) {
+
+            Log.w("MainActivity.java", "THE button clicked is " + v.getId());
+            Log.w("MainActivity.java", "THE first button is " + translationButtons.get(0).getId());
+            Log.w("MainActivity.java", "THE first button is " + findViewById(R.id.button_1).getId());
+            Log.w("MainActivity.java", "THE first button is " + R.id.button_1);
+            Log.w("MainActivity.java", "THE number of translations to guess is " + noOfTranslationsToGuess);
+
+
+            //((Button) v).setText("me?");
+            v.setBackgroundColor(55);
+            // testButton.setText("hello");
+            noOfTranslationsToGuess--;
+        }
     }
 
-    public void displayNextWord(int number) {
+    public void displayNextWord() {
         TextView germanWord = (TextView) findViewById(R.id.german_word);
-        germanWord.setText(String.valueOf(indexGermanToEnglishJava.get(number).get(0).get(0)));
+        germanWord.setText(String.valueOf(indexGermanToEnglishJava.get(wordNumber).get(0).get(0)));
 
-        int entrySizeEn = indexGermanToEnglishJava.get(number).get(1).size();
+        int entrySizeEn = indexGermanToEnglishJava.get(wordNumber).get(1).size();
         Log.w("MainActivity.java", "THE Translation ENTRY SIZE IS " + entrySizeEn);
         int noOfTranslationsToShow = Math.min(entrySizeEn, 3);
+        noOfTranslationsToGuess = noOfTranslationsToShow;
 
-        List<Integer> indexNoEnWords = indexGermanToEnglishJava.get(number).get(2);
+        List<Integer> indexNoEnWords = indexGermanToEnglishJava.get(wordNumber).get(2);
 
         Integer entryStartEnWords = indexNoEnWords.get(0);
 
@@ -161,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
             int random = (int) (Math.random() * entrySizeEn);
             Log.w("MainActivity.java", "THE chosen entry IS " + random);
-            String nextWord = new String(String.valueOf(indexGermanToEnglishJava.get(number).get(1).get(random)));
+            String nextWord = new String(String.valueOf(indexGermanToEnglishJava.get(wordNumber).get(1).get(random)));
             if(!choices.contains(nextWord))
                 choices.add(nextWord);
 
@@ -195,13 +254,11 @@ public class MainActivity extends AppCompatActivity {
 
         displayTranslations(choices, randomizeOrder);
         Log.w("MainActivity.java", "Point 5");
-
+        wordNumber = wordNumber + 1;
     }
 
 
     public void displayTranslations(List<String> choices, int[] randomizeOrder) {
-
-        indexTranslationButtons(translationButtons);
 
 
         for (i=0; i < noOfButtons; i++) {
@@ -211,6 +268,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
     }
+
+
+
+
+
+
+
 
 }
